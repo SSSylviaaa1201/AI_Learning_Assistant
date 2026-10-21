@@ -52,6 +52,26 @@ Returns the upload metadata (never the bytes) for the authenticated owner.
 
 OCR of scanned/image-only PDFs is out of scope in phase 1; such files are accepted but may yield empty extracted text (recorded as an extraction note).
 
+### Screenshot evidence text bundle
+
+An ordinary owner-scoped `.txt` upload may start with `AILA_EVIDENCE_V1` and a
+newline followed by a JSON object with a `figures` list. Each row contains `id`,
+`caption`, `media_type` (`image/png` or `image/jpeg`), `data_base64`, and the
+decoded image's `sha256`. Limits: 8 MiB bundle, 12 figures, 2 MiB per image.
+IDs must use letters, digits, underscores or hyphens. Invalid checksums, media
+types, signatures and duplicate IDs are rejected during extraction with a note.
+No new upload endpoint or raw-image upload type is introduced.
+
+Context extraction supplies only captions, IDs and checksums to the model;
+binary data is retained in memory as validated evidence figures. The essay
+pipeline replaces `[[EVIDENCE:ID]]` markers with inert data-URI figures before
+HTML-to-PDF conversion. Any omitted supplied figure is appended in an evidence
+section. Captions are HTML-escaped; remote assets and SVG are not accepted in
+this format. The original uploaded bytes remain owner-scoped runtime data.
+
+Checks: `backend/tests/test_evidence.py` covers input validation, preserved image
+bytes, large-image extraction, model-prompt exclusion and run integration.
+
 ## Limits
 
 | Limit | Value | Rationale |

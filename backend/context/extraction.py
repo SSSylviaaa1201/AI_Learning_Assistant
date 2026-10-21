@@ -4,6 +4,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from backend.artifacts.evidence import (
+    EVIDENCE_HEADER, MAX_EVIDENCE_FILE_BYTES, EvidenceFigure, parse_evidence_bundle,
+)
+
 MAX_EXTRACTED_CHARS_PER_UPLOAD = 50000
 TEXT_EXTENSIONS = {".txt", ".md", ".markdown", ".py", ".html", ".htm", ".css", ".csv", ".json"}
 NOTEBOOK_EXTENSIONS = {".ipynb"}
@@ -20,6 +24,7 @@ class UploadExtraction:
     extracted_text: str
     notes: tuple[str, ...] = field(default_factory=tuple)
     estimated_tokens: int = 0
+    evidence_figures: tuple[EvidenceFigure, ...] = field(default_factory=tuple, repr=False)
 
     @property
     def extracted_chars(self) -> int:
@@ -45,6 +50,7 @@ class UploadExtraction:
             "extracted_chars": self.extracted_chars,
             "estimated_tokens": self.estimated_tokens,
             "notes": list(self.notes),
+            "evidence_figure_ids": [figure.id for figure in self.evidence_figures],
         }
 
 
@@ -69,6 +75,15 @@ def extract_upload(upload: dict[str, Any]) -> UploadExtraction:
             text, notes = _extract_pdf(stored_path)
         elif extension in TEXT_EXTENSIONS or (media_type or "").startswith("text/"):
             text, notes = _extract_text(stored_path)
+            if text.startswith(EVIDENCE_HEADER):
+                try:
+                    if stored_path.stat().st_size > MAX_EVIDENCE_FILE_BYTES:
+                        raise ValueError("Evidence bundle exceeds size limit")
+                    figures = parse_evidence_bundle(text)
+                    summary = "Screenshot evidence available for HTML/PDF embedding:\n" + "\n".join(figure.context_text() for figure in figures)
+                    return _extraction_from_upload(upload, summary, [], evidence_figures=figures)
+                except (ValueError, TypeError, KeyError, AttributeError):
+                    return _extraction_from_upload(upload, "", ["Invalid evidence bundle; screenshots were not included. Supply a valid evidence bundle before final reporting."])
         else:
             text = ""
             notes = ["Upload type is not text-extractable in phase 1."]
@@ -86,6 +101,8 @@ def _extraction_from_upload(
     upload: dict[str, Any],
     extracted_text: str,
     notes: list[str],
+    *,
+    evidence_figures: tuple[EvidenceFigure, ...] = (),
 ) -> UploadExtraction:
     return UploadExtraction(
         id=upload["id"],
@@ -95,6 +112,7 @@ def _extraction_from_upload(
         sha256=upload.get("sha256") or "",
         extracted_text=extracted_text,
         notes=tuple(notes),
+        evidence_figures=evidence_figures,
     )
 
 

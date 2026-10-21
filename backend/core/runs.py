@@ -441,6 +441,7 @@ def execute_essay_latex_run(
             options=preparation.routing.options,
             search=artifact_run.search,
             max_output_tokens=preparation.context.estimate.estimated_output_tokens,
+            evidence_figures=tuple(figure for upload in preparation.context.uploads for figure in upload.evidence_figures),
             emit_event=emit_event,
             timing=timing,
         )

@@ -6,6 +6,15 @@ Status: Complete
 
 # Product Specification
 
+## Deployment report evidence (2026-10-21)
+
+The essay pipeline can embed validated screenshot evidence supplied through an
+owner-scoped text bundle. Screenshot bytes are inserted after model generation,
+so the text model receives captions and evidence IDs rather than base64 payloads.
+BA3073 report instructions require an evidence-backed report within 20 A4 pages,
+truthful treatment of incomplete tests, and separate local/direct-IP/HTTPS checks.
+See the additive evidence-bundle format in `docs/CONTRACTS/uploads.md`.
+
 ## Account Display
 
 The signed-in identity control displays the user's email address without a role

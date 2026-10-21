@@ -1,0 +1,16 @@
+# Reuse this account's verified runtime when Docker Hub/download CDNs are slow.
+# The pinned image has identical requirements.txt and requirements-dev.txt files.
+# Dockerfile remains the complete fresh-runtime build path.
+FROM crpi-nhsrlij77120ulh1.cn-guangzhou.personal.cr.aliyuncs.com/sunyinluo/sunyinluo@sha256:5108997ce92db3955ea3e7c407d5f1a03e540ad18a794a8e2829ea2f4f52be02
+
+WORKDIR /app
+COPY backend backend
+RUN python -c "from pathlib import Path; import hashlib; expected={'requirements.txt':'16539896728c60b05cb1e293a337d308b26ab28fcf09e8bb069636c27f8d7307','requirements-dev.txt':'dcb961241e3e47f7a622d80a13b05fbfbc2c6d0f26b9b48746a7039cda1b2e6d'}; assert all(hashlib.sha256((Path('backend')/p).read_bytes()).hexdigest()==h for p,h in expected.items()), 'Dependency files changed; rebuild the full Dockerfile runtime'"
+COPY pytest.ini pytest.ini
+COPY slides_html slides_html
+COPY scripts/verify-deployment.py /app/scripts/verify-deployment.py
+LABEL org.opencontainers.image.source="https://github.com/bnbu-busa-projects/AI_Learning_Assistant" \
+      org.opencontainers.image.revision="242afd54ca88fb3eba2cb2f6099164eb86b6317e"
+
+EXPOSE 14242
+CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "14242"]
