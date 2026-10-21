@@ -56,5 +56,7 @@ The user subsequently supplied all three original address-bar screenshots,
 showing signed-in production consoles for local, direct-IP and HTTPS access.
 After Task 2 collection, loopback-only binding was restored at 08:24 UTC;
 origin gateway and application Bearer checks passed again at 08:25 UTC. The
-cloud security-group rule deletion still requires confirmation. Idle preview
-screenshots must not be described as completed report generation.
+user subsequently confirmed deletion of the cloud security-group 14242 inbound
+rule. This is user-confirmed rather than queried via a cloud API. Complete source
+was pushed to the repository above and the remote branch was checked. Idle
+preview screenshots must not be described as completed report generation.

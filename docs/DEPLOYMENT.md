@@ -18,11 +18,11 @@ have been prepared in the workspace's report-inputs directory.
 
 ## Observed access paths
 
-The user supplied a real Edge screenshot on their own computer showing
-https://sunyinluo.asia/ui/ and the rendered application login page on 2026-10-21.
-HTTPS browser access therefore works in that session. Application sign-in and
-production-console access are not shown in that screenshot. The gateway password
-prompt was reported separately by the user.
+The user supplied original Edge screenshots on 2026-10-21 showing the actual
+address bars and signed-in production consoles for local, direct-IP and HTTPS
+access. The final domain is https://sunyinluo.asia/ui/. The gateway password
+prompt was reported separately by the user and authentication was independently
+checked on the origin. Idle artifact previews are not generated reports.
 
 Earlier command-line probes encountered TLS closure, while public HTTP returned
 Alibaba Cloud's Non-compliance ICP Filing page (403). These observations must be
@@ -55,8 +55,10 @@ Task 2 used 0.0.0.0:14242 with the cloud security-group rule restricted to the
 student's observed IP 112.96.87.60/32. Independent client UI and health checks
 returned 200 before closure. ECS self-requests timed out because the ECS source
 was not the allowed client; preserve that difference in the evidence.
-The backend is now loopback-only. The cloud console's temporary 14242 rule still
-needs user-confirmed removal. Complete workbench address-bar screenshots remain missing; the Edge HTTPS login screenshot is retained as supporting evidence.
+The backend is now loopback-only. The user confirmed removal of the cloud
+security group's temporary 14242 inbound rule after screenshot collection.
+This cloud-console action is user-confirmed, not independently queried via API.
+All three original workbench address-bar screenshots have been collected.
 
 ## HTTPS access control
 
@@ -70,7 +72,8 @@ Basic authentication and app Bearer tokens both use Authorization. After a valid
 proxy sign-in, Nginx issues a Secure/HttpOnly/SameSite=Strict cookie, allowing the
 app's Bearer header through the separate proxy gate. Missing/wrong credentials
 and Bearer-without-gateway tests returned 401; authorized UI and app Bearer API
-returned 200 before public availability changed. The gate is separate from BNBU
+returned 200. Origin tests passed again after final loopback restoration.
+The gate is separate from BNBU
 login. Its deployment-wide shared token lacks per-user revocation; stronger
 session management or an identity-aware proxy remains a future improvement.
 
@@ -86,11 +89,12 @@ Local and ECS live model, generation, download and manifest checks passed; exist
 accounts and artifacts survived replacements. Chromium HTML-to-PDF was verified.
 No assignment report has been authored outside the production console.
 
-Remaining inputs: investigate HTTP/ACME challenge reachability; three complete
-address-bar screenshots; confirmation of temporary security-group rule removal;
-and the student's own GitHub source repository URL. Windows browser automation
-stopped because it could not reliably identify the current URL. Page-only images
-are not substitutes for the required screenshots.
+Complete modified source was pushed to the user-selected repository:
+https://github.com/SSSylviaaa1201/AI_Learning_Assistant.
+Report prompt, sanitized references and three original screenshot assets are
+prepared locally. Report prose still must be generated in the production console.
+Public HTTP/ACME challenge reachability and the failed renewal dry-run remain
+documented operational limitations; do not claim these checks passed.
 
 Never submit the preparation note, private credentials, .env files, data/,
 workspace/, dependency directories, runtime archives or private keys.
