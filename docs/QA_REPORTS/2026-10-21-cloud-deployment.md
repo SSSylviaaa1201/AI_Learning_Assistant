@@ -48,6 +48,13 @@ evidence and instructions.
 
 ## Submission source
 
-Student-specified repository: https://github.com/Sylviaaa1201/AI_Learning_Assistant.
+Student-specified repository: https://github.com/SSSylviaaa1201/AI_Learning_Assistant.
 The teaching repository remains the upstream reference. Credentials, `.env`,
 runtime data, generated artifacts and dependency directories are excluded.
+
+The user subsequently supplied all three original address-bar screenshots,
+showing signed-in production consoles for local, direct-IP and HTTPS access.
+After Task 2 collection, loopback-only binding was restored at 08:24 UTC;
+origin gateway and application Bearer checks passed again at 08:25 UTC. The
+cloud security-group rule deletion still requires confirmation. Idle preview
+screenshots must not be described as completed report generation.
